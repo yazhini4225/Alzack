@@ -1,0 +1,2 @@
+import {useEffect,useState} from 'react'; import Link from 'next/link'
+export default function Dashboard(){ const [p,setP]=useState(null); useEffect(()=>{ fetch('/api/me').then(r=>r.json()).then(j=>setP(j)) },[]); if(!p) return <div>Loading...</div>; if(p.role==='PATIENT') return <div style={{padding:20}}><h2>Patient Home - {p.name}</h2><Link href='/patient/routines'>Routines</Link><br/><Link href='/patient/memory'>Memory</Link></div>; return <div style={{padding:20}}><h2>Caregiver - {p.name}</h2><Link href='/caregiver/patients'>Patients</Link></div> }

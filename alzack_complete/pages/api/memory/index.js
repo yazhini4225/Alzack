@@ -1,0 +1,3 @@
+import prisma from '../../../lib/prisma'; import { verifyToken } from '../../../lib/auth'
+async function getUser(req){ const cookie = req.headers.cookie || ''; const match = cookie.split(';').map(c=>c.trim()).find(c=>c.startsWith('alzack_token=')); if(!match) return null; const token = match.split('=')[1]; return verifyToken(token) }
+export default async function handler(req,res){ const payload = await getUser(req); if(!payload) return res.status(401).json({error:'not auth'}); const user = await prisma.user.findUnique({ where:{ id: payload.userId } }); if(user.role!=='PATIENT') return res.status(403).json({error:'only patient'}); const list = await prisma.memoryEntry.findMany({ where:{ patientId: user.patientId } }); res.json(list) }

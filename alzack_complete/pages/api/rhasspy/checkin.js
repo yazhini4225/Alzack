@@ -1,0 +1,2 @@
+import prisma from '../../../lib/prisma'
+export default async function handler(req,res){ if(req.method!=='POST') return res.status(405).end(); const { patientId, message } = req.body; if(!patientId) return res.status(400).json({ error:'missing patientId' }); const log = await prisma.moodLog.create({ data:{ patientId, source:'rhasspy', moodValue:0, notes: message || 'rhasspy checkin triggered' } }); res.json({ ok:true, log }) }
